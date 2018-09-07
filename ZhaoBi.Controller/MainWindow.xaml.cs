@@ -31,8 +31,13 @@ namespace ZhaoBi.Controller
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// 程序运行控制器线程
+        /// </summary>
         private Task _AppTask;
+        /// <summary>
+        /// 是否运行
+        /// </summary>
         private bool _ISRUN;
         private void startMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -49,6 +54,9 @@ namespace ZhaoBi.Controller
         {
             _ISRUN = false;
         }
+        /// <summary>
+        /// 控制器
+        /// </summary>
         private void Controller()
         {
             for (int i = 0; i < Grid1.Items.Count; i++)
@@ -125,6 +133,12 @@ namespace ZhaoBi.Controller
             }
             MessageBox.Show("完成!");
         }
+        /// <summary>
+        /// 等待验证码
+        /// </summary>
+        /// <param name="get">等待对象</param>
+        /// <param name="time">最长等待时间(秒)</param>
+        /// <returns></returns>
         private bool WaitCode(GetMa get, int time)
         {
             Stopwatch sw = new Stopwatch();
