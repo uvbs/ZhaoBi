@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ZhaoBi.Controller.Entity;
 using ZhaoBi.Controller.Ma;
 using ZhaoBi.Controller.Vpn;
@@ -30,6 +20,7 @@ namespace ZhaoBi.Controller
         public MainWindow()
         {
             InitializeComponent();
+
         }
         /// <summary>
         /// 程序运行控制器线程
@@ -62,14 +53,12 @@ namespace ZhaoBi.Controller
             for (int i = 0; i < Grid1.Items.Count; i++)
             {
                 if (!_ISRUN) break;
-
                 var _RandIp = RandIp();
 #if DEBUG
                 Console.WriteLine($"随机IP为 :{_RandIp}");
 #endif
                 var item = Grid1.Items[i] as RegisInfo;
                 Dispatcher.Invoke(() => { Grid1.ScrollIntoView(item); });
-
                 GetMa get = new GetMa();
                 item.Status = "获取手机号";
                 while (true)
@@ -80,10 +69,10 @@ namespace ZhaoBi.Controller
                     }
                     Thread.Sleep(2000);
                 }
-                Register rigister = new Register(Config.RegisCode, _RandIp);
-                rigister.RegisPhone = get.CurPhone;
+                Register register = new Register(Config.RegisCode, _RandIp);
+                register.RegisPhone = get.CurPhone;
                 item.Status = "发送验证码";
-                if (rigister.SendMsg())
+                if (register.SendMsg())
                 {
                     item.Status = "等待验证码";
                     if (WaitCode(get, Config.WaitTime))
@@ -91,12 +80,11 @@ namespace ZhaoBi.Controller
                         var code = get.CurMsg;
                         item.Status = "注册中";
                         // var flag = rigister.Regis(code);
-                        if (rigister.Regis(code))
+                        if (register.Regis(code))
                         {
                             item.Status = "上传中";
-                            var (phone, token) = rigister.GetParamter;
-                            UpLoadIMG upload = new UpLoadIMG(System.IO.Path.Combine(item.CertifiCatePath, "正面.jpg"),
-                                System.IO.Path.Combine(item.CertifiCatePath, "手持.jpg"), token, _RandIp);
+                            var (phone, token) = register.GetParamter;
+                            UpLoadIMG upload = new UpLoadIMG(Path.Combine(item.CertifiCatePath, "正面.jpg"), Path.Combine(item.CertifiCatePath, "手持.jpg"), token, _RandIp);
                             var flag = upload.Submit();
                             if (flag)
                             {
@@ -107,22 +95,23 @@ namespace ZhaoBi.Controller
                             {
                                 item.Status = "上传失败";
                             }
-                            Directory.Move(flag ? Config.SUCC : Config.FAIL, item.CertifiCatePath);
+                            DirMove(item.CertifiCatePath, flag ? Config.SUCC : Config.FAIL);
                         }
                         else
                         {
+                            DirMove(item.CertifiCatePath, Config.FAIL);
                             item.Status = "注册失败";
                         }
                     }
                     else
                     {
-                        Directory.Move(Config.FAIL, item.CertifiCatePath);
+                        DirMove(item.CertifiCatePath, Config.FAIL);
                         item.Status = "等待验证码超时";
                     }
                 }
                 else
                 {
-                    Directory.Move(Config.FAIL, item.CertifiCatePath);
+                    DirMove(item.CertifiCatePath, Config.FAIL);
                     item.Status = "验证码发送失败";
                 }
                 get.AddBlack();
@@ -162,6 +151,16 @@ namespace ZhaoBi.Controller
             }
             return false;
         }
+        /// <summary>
+        /// 移动文件夹
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        private void DirMove(string path1, string path2)
+        {
+            Directory.Move(path1, Path.Combine(path2, Path.GetFileName(path1)));
+        }
+
         private void loginMa_Click(object sender, RoutedEventArgs e)
         {
             var flag = GetMa.Login(Config.UserApi, Config.PassWord);
