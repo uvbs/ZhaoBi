@@ -56,16 +56,18 @@ namespace ZhaoBi.Rigister
         public bool SendMsg()
         {
             HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "https://pcapi.licai.cn/api/send/newsms";
-            item.Method = "POST";
-            item.ContentType = "application/x-www-form-urlencoded;";
-            item.Referer = "https://www.zhaobi.com/";
-            item.UserAgent = USERAGENT;
+            HttpItems item = new HttpItems
+            {
+                URL = "https://pcapi.licai.cn/api/send/newsms",
+                Method = "POST",
+                ContentType = "application/x-www-form-urlencoded;",
+                Referer = "https://www.zhaobi.com/",
+                UserAgent = USERAGENT,
+                Postdata = $"platkey=zhaobi&codetype=quick&area=86&mobile={_phone}&param=FzmRandom4&ticket=&businessId="
+            };
             item.Header.Add("Authorization", "Bearer null");
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", _userIp);
-            item.Postdata = $"platkey=zhaobi&codetype=quick&area=86&mobile={_phone}&param=FzmRandom4&ticket=&businessId=";
             var result = http.GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(SendMsg)} result:{result}");
@@ -80,16 +82,18 @@ namespace ZhaoBi.Rigister
         public bool Regis(string code)
         {
             HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "https://pcapi.licai.cn/api/member/quickreg";
-            item.Method = "POST";
+            HttpItems item = new HttpItems
+            {
+                URL = "https://pcapi.licai.cn/api/member/quickreg",
+                Method = "POST",
+                ContentType = "application/x-www-form-urlencoded;",
+                Referer = "https://www.zhaobi.com/",
+                UserAgent = USERAGENT,
+                Postdata = $"type=sms&area=86&mobile={_phone}&code={code}&email=&redirect_uri=suibiantian&broker_code=&invite_code={_regisCode}"
+            };
             item.Header.Add("Authorization", "Bearer null");
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", _userIp);
-            item.ContentType = "application/x-www-form-urlencoded;";
-            item.Referer = "https://www.zhaobi.com/";
-            item.UserAgent = USERAGENT;
-            item.Postdata = $"type=sms&area=86&mobile={_phone}&code={code}&email=&redirect_uri=suibiantian&broker_code=&invite_code={_regisCode}";
             var result = http.GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Regis)} result:{result}");
@@ -100,21 +104,23 @@ namespace ZhaoBi.Rigister
         /// <summary>
         /// 获取登录accesstoken参数
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="code">短信验证码</param>
         /// <returns></returns>
         private bool Login(string code)
         {
             HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "https://pcapi.licai.cn/api/member/quicklogin";
-            item.Method = "POST";
+            HttpItems item = new HttpItems
+            {
+                URL = "https://pcapi.licai.cn/api/member/quicklogin",
+                Method = "POST",
+                ContentType = "application/x-www-form-urlencoded;",
+                Referer = "https://www.zhaobi.com/",
+                UserAgent = USERAGENT,
+                Postdata = $"type=sms&area=86&mobile={_phone}&code={code}&logintype=code&redirect_uri=suibiantian&email=&password=&broker_code=&ticket=&businessId="
+            };
             item.Header.Add("Authorization", "Bearer null");
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", _userIp);
-            item.ContentType = "application/x-www-form-urlencoded;";
-            item.Referer = "https://www.zhaobi.com/";
-            item.UserAgent = USERAGENT;
-            item.Postdata = $"type=sms&area=86&mobile={_phone}&code={code}&logintype=code&redirect_uri=suibiantian&email=&password=&broker_code=&ticket=&businessId=";
             var result = http.GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Login)} result:{result}");

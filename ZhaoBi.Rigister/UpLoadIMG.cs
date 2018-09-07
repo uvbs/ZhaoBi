@@ -47,14 +47,16 @@ namespace ZhaoBi.Rigister
         private string UploadToken()
         {
             HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "https://pcapi.licai.cn/api/certification/UploadToken";
-            item.Method = "POST";
-            item.ContentType = "application/x-www-form-urlencoded;";
+            HttpItems item = new HttpItems
+            {
+                URL = "https://pcapi.licai.cn/api/certification/UploadToken",
+                Method = "POST",
+                ContentType = "application/x-www-form-urlencoded;",
+                Referer = "https://www.zhaobi.com/",
+                UserAgent = UpLoadIMG.USERAGENT
+            };
             item.Header.Add("FZM-USER-IP", _userIp);
             item.Header.Add("Authorization", $"Bearer {_authorization}");
-            item.Referer = "https://www.zhaobi.com/";
-            item.UserAgent = UpLoadIMG.USERAGENT;
             var result = http.GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(UploadToken)} result: {result}");
@@ -71,7 +73,7 @@ namespace ZhaoBi.Rigister
         /// <returns></returns>
         private string UploadFile(string token, string _certifiCatePath)
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://ossupload.licai.cn/upload/certificate");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://ossupload.licai.cn/upload/certificate");
             request.Method = "POST";
             request.ContentType = "multipart/form-data; boundary=----WebKitFormBoundaryptq5khV1RAo639Gs";
             request.Referer = "https://www.zhaobi.com/";
@@ -96,7 +98,6 @@ namespace ZhaoBi.Rigister
 #if DEBUG
             Console.WriteLine($"{nameof(UploadFile)} result: {result}");
 #endif
-
             sr.Close();
             if (result.Contains("succ\",\"code\":200"))
             {
@@ -113,16 +114,18 @@ namespace ZhaoBi.Rigister
         private (string name, string cardid) Ocr(string mid)
         {
             HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "https://pcapi.licai.cn/api/Certification/Ocr";
-            item.Method = "POST";
-            item.ContentType = "application/x-www-form-urlencoded;";
+            HttpItems item = new HttpItems
+            {
+                URL = "https://pcapi.licai.cn/api/Certification/Ocr",
+                Method = "POST",
+                ContentType = "application/x-www-form-urlencoded;",
+                Referer = "https://www.zhaobi.com/",
+                UserAgent = UpLoadIMG.USERAGENT,
+                Postdata = $"mid={mid}"
+            };
             item.Header.Add("Authorization", $"Bearer {_authorization}");
             item.Header.Add("FZM-USER-IP", _userIp);
             item.Header.Add("FZM-REQUEST-OS", "web");
-            item.Referer = "https://www.zhaobi.com/";
-            item.UserAgent = UpLoadIMG.USERAGENT;
-            item.Postdata = "mid=" + mid;
             var result = http.GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Ocr)} result: {result}");
@@ -145,16 +148,18 @@ namespace ZhaoBi.Rigister
         private bool Identity(string cartid, string name, string midA, string midB)
         {
             HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "https://pcapi.licai.cn/api/certification/identity";
-            item.Method = "POST";
+            HttpItems item = new HttpItems
+            {
+                URL = "https://pcapi.licai.cn/api/certification/identity",
+                Method = "POST",
+                ContentType = "application/x-www-form-urlencoded;",
+                Referer = "https://www.zhaobi.com/",
+                UserAgent = USERAGENT,
+                Postdata = $"country=CN&cardtype=1&cardid={cartid}&name={UrlEncode(name)}&mid={midA}&matchmid={midB}"
+            };
             item.Header.Add("Authorization", "Bearer " + _authorization);
-            item.ContentType = "application/x-www-form-urlencoded;";
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", this._userIp);
-            item.Referer = "https://www.zhaobi.com/";
-            item.UserAgent = USERAGENT;
-            item.Postdata = $"country=CN&cardtype=1&cardid={cartid}&name={UrlEncode(name)}&mid={midA}&matchmid={midB}";
             var result = http.GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Identity)} result: {result}");

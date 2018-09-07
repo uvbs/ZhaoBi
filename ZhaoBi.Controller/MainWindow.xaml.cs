@@ -113,7 +113,6 @@ namespace ZhaoBi.Controller
                         {
                             item.Status = "注册失败";
                         }
-
                     }
                     else
                     {
