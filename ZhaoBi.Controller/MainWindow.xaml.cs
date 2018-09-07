@@ -90,15 +90,14 @@ namespace ZhaoBi.Controller
                     {
                         var code = get.CurMsg;
                         item.Status = "注册中";
-                        var flag = rigister.Regis(code);
-                        if (flag)
+                        // var flag = rigister.Regis(code);
+                        if (rigister.Regis(code))
                         {
                             item.Status = "上传中";
                             var (phone, token) = rigister.GetParamter;
-                            
                             UpLoadIMG upload = new UpLoadIMG(System.IO.Path.Combine(item.CertifiCatePath, "正面.jpg"),
                                 System.IO.Path.Combine(item.CertifiCatePath, "手持.jpg"), token, _RandIp);
-                            flag = upload.Submit();
+                            var flag = upload.Submit();
                             if (flag)
                             {
                                 item.Status = "上传成功";
@@ -110,7 +109,11 @@ namespace ZhaoBi.Controller
                             }
                             Directory.Move(flag ? Config.SUCC : Config.FAIL, item.CertifiCatePath);
                         }
-                        item.Status = flag ? "注册成功" : "注册失败";
+                        else
+                        {
+                            item.Status = "注册失败";
+                        }
+
                     }
                     else
                     {
