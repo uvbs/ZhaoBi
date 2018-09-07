@@ -46,7 +46,6 @@ namespace ZhaoBi.Rigister
         /// <returns></returns>
         private string UploadToken()
         {
-            HttpHelpers http = new HttpHelpers();
             HttpItems item = new HttpItems
             {
                 URL = "https://pcapi.licai.cn/api/certification/UploadToken",
@@ -57,7 +56,7 @@ namespace ZhaoBi.Rigister
             };
             item.Header.Add("FZM-USER-IP", _userIp);
             item.Header.Add("Authorization", $"Bearer {_authorization}");
-            var result = http.GetHtml(item).Html;
+            var result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(UploadToken)} result: {result}");
 #endif
@@ -113,7 +112,6 @@ namespace ZhaoBi.Rigister
         /// <returns></returns>
         private (string name, string cardid) Ocr(string mid)
         {
-            HttpHelpers http = new HttpHelpers();
             HttpItems item = new HttpItems
             {
                 URL = "https://pcapi.licai.cn/api/Certification/Ocr",
@@ -126,7 +124,7 @@ namespace ZhaoBi.Rigister
             item.Header.Add("Authorization", $"Bearer {_authorization}");
             item.Header.Add("FZM-USER-IP", _userIp);
             item.Header.Add("FZM-REQUEST-OS", "web");
-            var result = http.GetHtml(item).Html;
+            var result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Ocr)} result: {result}");
 #endif
@@ -147,7 +145,6 @@ namespace ZhaoBi.Rigister
         }
         private bool Identity(string cartid, string name, string midA, string midB)
         {
-            HttpHelpers http = new HttpHelpers();
             HttpItems item = new HttpItems
             {
                 URL = "https://pcapi.licai.cn/api/certification/identity",
@@ -160,7 +157,7 @@ namespace ZhaoBi.Rigister
             item.Header.Add("Authorization", "Bearer " + _authorization);
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", this._userIp);
-            var result = http.GetHtml(item).Html;
+            var result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Identity)} result: {result}");
 #endif

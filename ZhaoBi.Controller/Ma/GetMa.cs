@@ -26,19 +26,19 @@ namespace ZhaoBi.Controller.Ma
         public static bool Login(string apiId, string pswd)
         {
             var result = string.Empty;
-            HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = $"http://api.ndd001.com/do.php?action=loginIn&name={apiId}&password={pswd}";
+            HttpItems item = new HttpItems
+            {
+                URL = $"http://api.ndd001.com/do.php?action=loginIn&name={apiId}&password={pswd}"
+            };
             try
             {
-                result = http.GetHtml(item).Html;
+                result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
                 Console.WriteLine($"{nameof(Login)} result:{result}");
 #endif
             }
             catch (Exception ex)
             {
-                ;
 #if DEBUG
                 Console.WriteLine($"{nameof(Login)} ex :{ ex.Message}");
 #endif
@@ -58,12 +58,13 @@ namespace ZhaoBi.Controller.Ma
         public bool GetPhone()
         {
             var result = string.Empty;
-            HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "http://api.ndd001.com/do.php?action=getPhone&sid=" + proJetId + "&token=" + GlobalToken;
+            HttpItems item = new HttpItems
+            {
+                URL = "http://api.ndd001.com/do.php?action=getPhone&sid=" + proJetId + "&token=" + GlobalToken
+            };
             try
             {
-                result = http.GetHtml(item).Html;
+                result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
                 Console.WriteLine($"{nameof(GetPhone)} result:{result}");
 #endif
@@ -88,12 +89,13 @@ namespace ZhaoBi.Controller.Ma
         public bool GetMessAge()
         {
             var result = string.Empty;
-            HttpHelpers http = new HttpHelpers();
-            HttpItems item = new HttpItems();
-            item.URL = "http://api.ndd001.com/do.php?action=getMessage&sid=" + proJetId + "&phone=" + CurPhone + "&token=" + GlobalToken;
+            HttpItems item = new HttpItems
+            {
+                URL = "http://api.ndd001.com/do.php?action=getMessage&sid=" + proJetId + "&phone=" + CurPhone + "&token=" + GlobalToken
+            };
             try
             {
-                result = http.GetHtml(item).Html;
+                result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
                 Console.WriteLine($"{nameof(GetMessAge)} result:{result}");
 #endif
@@ -120,12 +122,11 @@ namespace ZhaoBi.Controller.Ma
         /// </summary>
         public void AddBlack()
         {
-            HttpHelpers http = new HttpHelpers();
             HttpItems item = new HttpItems();
             try
             {
                 item.URL = "http://api.ndd001.com/do.php?action=addBlacklist&sid=" + proJetId + "&phone=" + CurPhone + "&token=" + GlobalToken;
-                var result = http.GetHtml(item).Html;
+                var result = new HttpHelpers().GetHtml(item).Html;
             }
             catch { }
         }

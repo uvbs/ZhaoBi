@@ -55,7 +55,6 @@ namespace ZhaoBi.Rigister
         /// <returns></returns>
         public bool SendMsg()
         {
-            HttpHelpers http = new HttpHelpers();
             HttpItems item = new HttpItems
             {
                 URL = "https://pcapi.licai.cn/api/send/newsms",
@@ -68,7 +67,7 @@ namespace ZhaoBi.Rigister
             item.Header.Add("Authorization", "Bearer null");
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", _userIp);
-            var result = http.GetHtml(item).Html;
+            var result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(SendMsg)} result:{result}");
 #endif
@@ -81,7 +80,6 @@ namespace ZhaoBi.Rigister
         /// <returns></returns>
         public bool Regis(string code)
         {
-            HttpHelpers http = new HttpHelpers();
             HttpItems item = new HttpItems
             {
                 URL = "https://pcapi.licai.cn/api/member/quickreg",
@@ -94,7 +92,7 @@ namespace ZhaoBi.Rigister
             item.Header.Add("Authorization", "Bearer null");
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", _userIp);
-            var result = http.GetHtml(item).Html;
+            var result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Regis)} result:{result}");
 #endif
@@ -108,7 +106,6 @@ namespace ZhaoBi.Rigister
         /// <returns></returns>
         private bool Login(string code)
         {
-            HttpHelpers http = new HttpHelpers();
             HttpItems item = new HttpItems
             {
                 URL = "https://pcapi.licai.cn/api/member/quicklogin",
@@ -121,7 +118,7 @@ namespace ZhaoBi.Rigister
             item.Header.Add("Authorization", "Bearer null");
             item.Header.Add("FZM-REQUEST-OS", "web");
             item.Header.Add("FZM-USER-IP", _userIp);
-            var result = http.GetHtml(item).Html;
+            var result = new HttpHelpers().GetHtml(item).Html;
 #if DEBUG
             Console.WriteLine($"{nameof(Login)} result:{result}");
 #endif
